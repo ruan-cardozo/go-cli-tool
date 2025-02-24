@@ -27,3 +27,11 @@ Ferramenta CLI para análise estática de códigos Python.
     ```bash
     deactivate
     ```
+4. Após entrar no ambiente virtual instale as dependencias com o comando:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+## Diagrama básico do CLI
+
+![alt text](image.png)
