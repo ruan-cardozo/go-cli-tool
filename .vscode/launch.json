@@ -1,16 +1,15 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-    
         {
-            "name": "Python Debugger: Current File",
-            "type": "debugpy",
+            "name": "Launch CLI Tool",
+            "type": "go",
             "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal"
+            "mode": "auto",
+            "program": "${workspaceFolder}/main.go", // Caminho completo para a ferramenta CLI
+            "args": ["count-lines", "-f", "${workspaceFolder}/javascript-tests/test.js"], // Argumento para a ferramenta CLI
+            "env": {}, // Adicione variáveis de ambiente se necessário
+            "cwd": "${workspaceFolder}" // Diretório de trabalho atual
         }
     ]
 }
