@@ -1,4 +1,0 @@
-click
-pytest
-pylint
-coverage

@@ -1,37 +1,48 @@
 # Code Mind Analyzer
 
-Ferramenta CLI para análise estática de códigos Python.
+Este é o projeto Code Mind Analyzer, desenvolvido para analisar e processar dados de código Javascript.
 
-## Como rodar o projeto
+## Instalação
 
-1. Antes de prosseguir, instale o Python na sua máquina utilizando os links abaixo:
+Para instalar o Go (Golang) e configurar o ambiente, siga os passos abaixo:
 
-    * [Instalação no Windows](https://python.org.br/instalacao-windows/)
-    * [Instalação no Linux](https://python.org.br/instalacao-linux/)
+### Passo 1: Baixar o Go
 
-2. Crie um ambiente virtual no diretório do projeto. Utilize o comando correspondente ao seu sistema operacional:
+Visite a página de [downloads do Go](https://golang.org/dl/) e baixe a versão 1.21 para o seu sistema operacional.
 
-    * **Linux:**
-        ```bash
-        python3 -m venv <meu_ambiente_virtual>
-        source meu_ambiente_virtual/bin/activate
-        ```
+### Passo 2: Instalar o Go
 
-    * **Windows:**
-        ```bash
-        python3 -m venv <meu_ambiente_virtual>
-        meu_ambiente_virtual\Scripts\activate
-        ```
+Siga as instruções de instalação específicas para o seu sistema operacional:
 
-3. Para desativar o ambiente virtual, utilize o comando:
-    ```bash
-    deactivate
-    ```
-4. Após entrar no ambiente virtual instale as dependencias com o comando:
-    ```bash
-    pip install -r requirements.txt
-    ```
+- **Windows**: Execute o instalador baixado e siga as instruções na tela.
+- **macOS**: Abra o pacote `.pkg` baixado e siga as instruções na tela.
+- **Linux**: Extraia o arquivo tar.gz baixado e mova-o para `/usr/local`:
 
-## Diagrama básico do CLI
+```sh
+tar -C /usr/local -xzf go1.21.linux-amd64.tar.gz
+```
 
-![alt text](image.png)
+### Passo 3: Configurar o PATH
+
+Adicione o diretório do Go ao seu PATH. Adicione as seguintes linhas ao seu arquivo de perfil (`~/.profile`, `~/.bashrc`, `~/.zshrc`, etc.):
+
+```sh
+export PATH=$PATH:/usr/local/go/bin
+```
+
+### Passo 4: Verificar a Instalação
+
+Verifique se o Go foi instalado corretamente executando o comando:
+
+```sh
+go version
+```
+
+Você deve ver a versão 1.21 do Go instalada.
+
+## Uso
+
+### Em breve
+
+Mais informações sobre como usar o Code Mind Analyzer serão adicionadas em breve.
+
