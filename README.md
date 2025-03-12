@@ -1,6 +1,6 @@
 # Go Cli Tool
 
-Este é o projeto Code Mind Analyzer, desenvolvido para analisar e processar dados de código Javascript.
+Este é o projeto Go Cli Tool, desenvolvido para analisar e processar dados de código Javascript.
 
 ## Instalação
 
