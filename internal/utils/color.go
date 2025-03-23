@@ -1,11 +1,11 @@
 package utils
 
 const (
-	Red = "\033[31m"
-	Green = "\033[32m"
-	Yellow = "\033[33m"
-	Blue = "\033[34m"
-	Magenta = "\033[35m"
-	Cyan = "\033[36m"
-	ResetColor = "\033[0m"
+	RED = "\033[31m"
+	GREEN = "\033[32m"
+	YELLOW = "\033[33m"
+	BLUE = "\033[34m"
+	MAGENTA = "\033[35m"
+	CYAN = "\033[36m"
+	RESET_COLOR = "\033[0m"
 )
