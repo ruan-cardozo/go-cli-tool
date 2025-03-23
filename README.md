@@ -42,7 +42,23 @@ Você deve ver a versão 1.21 do Go instalada.
 
 ## Uso
 
-### Em breve
+Para usar o CLI, siga os passos abaixo:
 
-Mais informações sobre como usar o Go Cli Tool serão adicionadas em breve.
+### Passo 1: Clonar o Repositório
 
+Clone o repositório do Code Mind Analyzer:
+
+```sh
+git clone https://github.com/ruan-cardozo/go-cli-tool.git
+cd go-cli-tool
+```
+
+### Passo 2: Construir e Instalar
+
+Execute o script `build_and_install.sh` com os seguintes comandos:
+
+```sh
+./build_and_install.sh build
+./build_and_install.sh install
+./build_and_install.sh clean
+```
