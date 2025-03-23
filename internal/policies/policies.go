@@ -18,5 +18,5 @@ func ValidateFilePath(filePath string) bool {
 func IsJSFileExtension(filePath string) bool {
 	ext := filepath.Ext(filePath)
 
-	return ext == ".js"
+	return ext == ".js" || ext == ".mjs"
 }

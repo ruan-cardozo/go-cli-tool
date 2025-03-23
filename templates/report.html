@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.CommandType}} Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .filter-input {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{.CommandType}} Report</h1>
+    <div>
+        <label for="filter">Filter by file name:</label>
+        <input type="text" id="filter" class="filter-input" onkeyup="filterTable()" placeholder="Search for files..">
+    </div>
+    <table id="lineCountTable">
+        <thead>
+            <tr>
+                <th>File Name</th>
+                <th>{{.CommandType}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .Files}}
+            <tr>
+                <td>{{.FileName}}</td>
+                <td>{{.TotalLines}}</td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+    <h2>{{.CommandType}}: {{.TotalLines}}</h2>
+    <script>
+        function filterTable() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("filter");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("lineCountTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 1; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
