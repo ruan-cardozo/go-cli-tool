@@ -13,7 +13,7 @@ import (
 
 var countLinesCmd = &cobra.Command{
     Use:   "count-lines",
-    Short: "Count total lines and comment lines in a JavaScript file",
+    Short: "Count total lines in a JavaScript file",
     Run: func(cmd *cobra.Command, args []string) {
 
         validateUserInput()
