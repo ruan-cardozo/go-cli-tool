@@ -2,20 +2,22 @@ package analyzer
 
 import (
 	"bufio"
+	"fmt"
 
 	// "fmt"
 	"go-cli-tool/internal/policies"
+	"go-cli-tool/internal/utils"
 	"io/fs"
 	"os"
-	"os/user"
 	"path/filepath"
 	"slices"
 )
 type FilesNameCountLineMap map[string]LineResult
 var directoryOrFilesToIgnore = []string{".git", "node_modules"}
-var totalLinesByDirectory LineResult
 
-func CountLinesByFilePath(filePath string) LineResult {
+type CountLinesAnalyzerImpl struct{}
+
+func (a *CountLinesAnalyzerImpl) CountLinesByFilePath(filePath string) LineResult {
     file, err := os.Open(filePath)
 
     if err != nil {
@@ -41,8 +43,7 @@ func CountLinesByFilePath(filePath string) LineResult {
     return result
 }
 
-func CountLinesByDirectory(directoryPath string) (FilesNameCountLineMap, LineResult) {
-
+func (a *CountLinesAnalyzerImpl) CountLinesByDirectory(directoryPath string) (FilesNameCountLineMap, LineResult) {
     if directoryPath == "." {
         var err error
         directoryPath, err = os.Getwd()
@@ -51,16 +52,21 @@ func CountLinesByDirectory(directoryPath string) (FilesNameCountLineMap, LineRes
         }
     } else {
         var err error
-        directoryPath, err = expandPath(directoryPath)
+        directoryPath, err = utils.ExpandPath(directoryPath)
         if err != nil {
             panic(err)
         }
     }
 
+    // Verificar se o diretório existe
+    if _, err := os.Stat(directoryPath); os.IsNotExist(err) {
+        panic(fmt.Sprintf("directory %s does not exist", directoryPath))
+    }
+
     linesByArchive := make(FilesNameCountLineMap)
+    var totalLinesByDirectory LineResult
 
     err := filepath.WalkDir(directoryPath, func(path string, directory fs.DirEntry, err error) error {
-
         if err != nil {
             return err
         }
@@ -69,17 +75,14 @@ func CountLinesByDirectory(directoryPath string) (FilesNameCountLineMap, LineRes
         fileExtension := filepath.Ext(fileOrDirectoryName)
 
         if slices.Contains(directoryOrFilesToIgnore, fileOrDirectoryName) {
-
             if directory.IsDir() {
                 return filepath.SkipDir
             }
-
             return nil
         }
 
         if policies.IsJSFileExtension(fileExtension) {
-
-            linesByArchive[fileOrDirectoryName] = CountLinesByFilePath(path)
+            linesByArchive[fileOrDirectoryName] = a.CountLinesByFilePath(path)
         }
 
         return nil
@@ -90,7 +93,6 @@ func CountLinesByDirectory(directoryPath string) (FilesNameCountLineMap, LineRes
     }
 
     for result := range linesByArchive {
-
         file := linesByArchive[result]
         totalLinesByDirectory.TotalLines += file.TotalLines
     }
@@ -100,15 +102,4 @@ func CountLinesByDirectory(directoryPath string) (FilesNameCountLineMap, LineRes
 
 func isEmptyLine(line string) bool {
     return len(line) == 0
-}
-
-func expandPath(path string) (string, error) {
-    if path[:2] == "~/" {
-        usr, err := user.Current()
-        if err != nil {
-            return "", err
-        }
-        path = filepath.Join(usr.HomeDir, path[2:])
-    }
-    return path, nil
 }

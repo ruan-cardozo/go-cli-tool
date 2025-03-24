@@ -1,7 +1,7 @@
 package main
 
-import "go-cli-tool/cmd"
+import "go-cli-tool/cmd/root"
 
 func main() {
-    cmd.Execute()
+    root.RootCommand()
 }

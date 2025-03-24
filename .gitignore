@@ -1,1 +1,5 @@
 go-cli-tool
+coverage
+coverage.out
+go-cli-tool.exe
+report.html
