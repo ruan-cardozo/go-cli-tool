@@ -66,7 +66,7 @@ func SaveResultsToHTML[T GenericsType](
         for fileName, res := range v {
             files = append(files, FileResult{
                 FileName:   fileName,
-                Comments:   res.CommentLines,
+                TotalLines:   res.CommentLines,
             })
         }
     }

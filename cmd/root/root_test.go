@@ -37,3 +37,29 @@ func TestRootCommand(t *testing.T) {
         t.Logf("Expected Output: %q", expectedOutput)
     }
 }
+
+func TestRootCommandWithError(t *testing.T) {
+	// Cria um novo comando root
+	rootCmd := root.RootCmd
+
+	// Redireciona o stdout para um buffer para capturar a saída
+	var stdout bytes.Buffer
+	rootCmd.SetOut(&stdout)
+    rootCmd.SetErr(&stdout)
+
+	// Define um argumento inválido para simular um erro
+	rootCmd.SetArgs([]string{"invalid-command"})
+
+	// Executa o comando root
+	root.RootCommand()
+
+	// Verifica se a saída contém a mensagem de erro esperada
+	expectedOutput := "Error: unknown command \"invalid-command\" for \"go-cli-tool\"\nRun 'go-cli-tool --help' for usage.\nunknown command \"invalid-command\" for \"go-cli-tool\""
+	actualOutput := strings.TrimSpace(stdout.String())
+
+    if actualOutput != expectedOutput {
+        t.Errorf("RootCommandWithError() = %v, want %v", actualOutput, expectedOutput)
+        t.Logf("Actual Output: %q", actualOutput)
+        t.Logf("Expected Output: %q", expectedOutput)
+    }
+}

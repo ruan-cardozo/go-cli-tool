@@ -5,7 +5,8 @@ type LineResult struct {
 }
 
 type CommentResult struct {
-	CommentLines int
+	CommentLines  int
+	TotalComments int
 }
 
 type ClassFuncResult struct {
@@ -23,6 +24,11 @@ type ClassesAndFunctionsMap map[string]ClassFuncResult
 type CountClassesAndFunctionsAnalyzer interface {
 	CountClassesAndFunctionsByFilePath(filePath string) ClassFuncResult
 	CountClassesAndFunctionsByDirectory(directoryPath string) (ClassesAndFunctionsMap, ClassFuncResult)
+}
+
+type CountCommentsAnalyzer interface {
+	CountCommentsByFilePath(filePath string) CommentResult
+	CountCommentsByDirectory(directoryPath string) (CommentsMap, CommentResult)
 }
 
 type CommentsMap map[string]CommentResult
