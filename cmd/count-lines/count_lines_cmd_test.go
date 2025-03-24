@@ -147,3 +147,101 @@ func TestCountLinesCommandWithDirectoryPath(t *testing.T) {
         t.Logf("Expected Output: %q", expectedOutput)
     }
 }
+
+func TestCountLinesCommandWithWrongDirectoryPath(t *testing.T) {
+	
+	resetGlobals()
+
+	// create the count lines command
+	cmd := count_lines.CountLinesAnalyzer
+
+	// redirect the stdout to a buffer to capture the output
+	var stdout bytes.Buffer
+	cmd.SetOut(&stdout) 
+
+	// set the args
+	cmd.SetArgs([]string{"-d", "../../main.go"})
+
+	// execute the count lines command w/ args
+	cmd.Execute()
+
+	// check the output
+	expectedOutput := "\x1b[31mPlease provide a valid directory path.\x1b[0m"
+
+	actualOutput := stdout.String()
+
+	if actualOutput != expectedOutput {
+		t.Errorf("CountLinesCommand() = %v, want %v", actualOutput, expectedOutput)
+		t.Logf("Actual Output: %q", actualOutput)
+		t.Logf("Expected Output: %q", expectedOutput)
+	}
+}
+
+func TestCountLinesCommandWithDirectoryWihtoutJavascriptFiles(t *testing.T) {
+
+	resetGlobals()
+
+	// create the count lines command
+	cmd := count_lines.CountLinesAnalyzer
+
+	// redirect the stdout to a buffer to capture the output
+	var stdout bytes.Buffer
+	cmd.SetOut(&stdout) 
+
+	// set the args
+	cmd.SetArgs([]string{"-d", "../root"})
+
+	// execute the count lines command w/ args
+	cmd.Execute()
+
+	// check the output
+	expectedOutput := "\x1b[31mNo JavaScript files found in the provided directory.\x1b[0m"
+
+	actualOutput := stdout.String()
+
+	if actualOutput != expectedOutput {
+		t.Errorf("CountLinesCommand() = %v, want %v", actualOutput, expectedOutput)
+		t.Logf("Actual Output: %q", actualOutput)
+		t.Logf("Expected Output: %q", expectedOutput)
+	}
+}
+
+func TestCountLinesCommandWithValidDirectoryAndGeneratingReportHTML(t *testing.T) {
+
+	resetGlobals()
+
+	// create the count lines command
+	cmd := count_lines.CountLinesAnalyzer
+
+	// redirect the stdout to a buffer to capture the output
+	var stdout bytes.Buffer
+	cmd.SetOut(&stdout) 
+
+	// set the args
+	cmd.SetArgs([]string{"-d", "../../javascript-tests", "-o", "."})
+
+	// execute the count lines command w/ args
+	cmd.Execute()
+
+	// check the output
+	expectedOutput := "\x1b[1;34mReport generated successfully at report.html\x1b[0m\n"
+
+	actualOutput := stdout.String()
+
+	if actualOutput != expectedOutput {
+		t.Errorf("CountLinesCommand() = %v, want %v", actualOutput, expectedOutput)
+		t.Logf("Actual Output: %q", actualOutput)
+		t.Logf("Expected Output: %q", expectedOutput)
+	}
+
+	// verify if the file was created
+	reportPath := "./report.html"
+	if _, err := os.Stat(reportPath); os.IsNotExist(err) {
+		t.Errorf("Expected report file to be created at %s, but it does not exist", reportPath)
+	}
+
+	// clean up the generated report file
+	if err := os.Remove(reportPath); err != nil {
+		t.Errorf("Failed to remove the report file: %v", err)
+	}
+}

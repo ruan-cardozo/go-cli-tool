@@ -8,6 +8,8 @@ import (
 	"html/template"
 	"os"
 	"path/filepath"
+
+	"github.com/spf13/cobra"
 )
 
 //go:embed report.html
@@ -28,7 +30,8 @@ func SaveResultsToHTML(
     result analyzer.FilesNameCountLineMap, 
     totalLinesByDirectory analyzer.LineResult, 
     filePath string,
-    commandType utils.CommandType ) {
+    commandType utils.CommandType,
+    cmd *cobra.Command) {
 
     var files []FileResult
     for fileName, res := range result {
@@ -69,4 +72,6 @@ func SaveResultsToHTML(
     if err != nil {
         fmt.Printf("Error executing template: %s\n", err)
     }
+
+    fmt.Fprintf(cmd.OutOrStdout(),"\033[1;34mReport generated successfully at %s\033[0m\n", filePath)
 }

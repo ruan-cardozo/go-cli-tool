@@ -15,6 +15,15 @@ func ValidateFilePath(filePath string) bool {
     return true
 }
 
+func ValidateDirectoryPath(directoryPath string) bool {
+
+    info, err := os.Stat(directoryPath)
+    if os.IsNotExist(err) {
+        return false
+    }
+    return info.IsDir()
+}
+
 func IsJSFileExtension(filePath string) bool {
 	ext := filepath.Ext(filePath)
 

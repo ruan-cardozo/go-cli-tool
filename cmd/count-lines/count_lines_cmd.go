@@ -29,10 +29,22 @@ var CountLinesAnalyzer = &cobra.Command{
             return
         }
 
+        if utils.DirectoryPath != "" {
+            if !policies.ValidateDirectoryPath(utils.DirectoryPath) {
+                fmt.Fprintf(cmd.OutOrStdout(),"%sPlease provide a valid directory path.%s", utils.RED, utils.RESET_COLOR)
+                return
+            }
+        }
+
         result, totalLinesByDirectory := countLinesAnalyzer.CountLinesByDirectory(utils.DirectoryPath)
 
+        if len(result) == 0 {
+            fmt.Fprintf(cmd.OutOrStdout(),"%sNo JavaScript files found in the provided directory.%s", utils.RED, utils.RESET_COLOR)
+            return
+        }
+
         if utils.OutputFilePath != "" {
-            templates.SaveResultsToHTML(result, totalLinesByDirectory, utils.OutputFilePath, utils.COUNT_LINES)
+            templates.SaveResultsToHTML(result, totalLinesByDirectory, utils.OutputFilePath, utils.COUNT_LINES,cmd)
         } else {
             printResults(result, totalLinesByDirectory,cmd)
         }
