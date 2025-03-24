@@ -34,17 +34,17 @@ var CountLinesAnalyzer = &cobra.Command{
         if utils.OutputFilePath != "" {
             templates.SaveResultsToHTML(result, totalLinesByDirectory, utils.OutputFilePath, utils.COUNT_LINES)
         } else {
-            printResults(result, totalLinesByDirectory)
+            printResults(result, totalLinesByDirectory,cmd)
         }
     },
 }
 
-func printResults(result analyzer.FilesNameCountLineMap, totalLinesByDirectory analyzer.LineResult) {
+func printResults(result analyzer.FilesNameCountLineMap, totalLinesByDirectory analyzer.LineResult, cmd *cobra.Command) {
     for fileName, result := range result {
 
-        fmt.Printf("%s Total lines in %s:%s %d\n", utils.BLUE, fileName, utils.RESET_COLOR, result.TotalLines)
+        fmt.Fprintf(cmd.OutOrStdout(),"%s Total lines in %s:%s %d\n", utils.BLUE, fileName, utils.RESET_COLOR, result.TotalLines)
     }
-    fmt.Printf("%sTotal lines in directory:%s %d\n", utils.BLUE, utils.RESET_COLOR, totalLinesByDirectory.TotalLines)
+    fmt.Fprintf(cmd.OutOrStdout(),"%sTotal lines in directory:%s %d\n", utils.BLUE, utils.RESET_COLOR, totalLinesByDirectory.TotalLines)
 }
 
 func validateUserInput(cmd *cobra.Command) bool {
@@ -57,20 +57,16 @@ func validateUserInput(cmd *cobra.Command) bool {
     }
 
     if utils.FilePath != "" {
-       err = validateFilePath(err)
+       err = validateFilePath(err,cmd)
     }
 
     return err
 }
 
-func validateFilePath(err bool) bool {
-    if !policies.ValidateFilePath(utils.FilePath) {
-        fmt.Printf("%sPlease provide the path to the JavaScript file using the -f flag or use.%s", utils.RED, utils.RESET_COLOR)
-        err = true
-    }
+func validateFilePath(err bool, cmd *cobra.Command) bool {
 
     if !policies.IsJSFileExtension(utils.FilePath) {
-        fmt.Printf("%sOnly JavaScript files are accepted.%s", utils.RED, utils.RESET_COLOR)
+        fmt.Fprintf(cmd.OutOrStdout(), "%sOnly JavaScript files are accepted.%s", utils.RED, utils.RESET_COLOR)
         err = true
     }
 
