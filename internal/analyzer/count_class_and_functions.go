@@ -13,6 +13,8 @@ import (
 	"strings"
 )
 
+const FUNCTIONS_REGEX = `(?m)^\s*(const|let|var)?\s*(\w+\s*=\s*)?(function\s*\w*\s*\([^)]*\)\s*{|\([^)]*\)\s*=>\s*{|\w+\s*\([^)]*\)\s*{)|\([^)]*\)\s*=>\s*{|function\s*\([^)]*\)\s*{`
+
 type CountClassAndFunctionsImpl struct {}
 
 func (a *CountClassAndFunctionsImpl) CountClassesAndFunctionsByFilePath(filePath string) ClassFuncResult {
@@ -32,7 +34,7 @@ func (a *CountClassAndFunctionsImpl) CountClassesAndFunctionsByFilePath(filePath
 
 	content := fileContent.String()
 
-	functionRegex := regexp.MustCompile(`(?m)^\s*(function\s+\w+\s*\([^)]*\)\s*{|^\s*\w+\s*=\s*function\s*\([^)]*\)\s*{|^\s*\w+\s*=\s*\([^)]*\)\s*=>\s*{)`)
+    functionRegex := regexp.MustCompile(FUNCTIONS_REGEX)
 
 	classRegex := regexp.MustCompile(`(?m)^\s*class\s+\w+\s*{`)
 

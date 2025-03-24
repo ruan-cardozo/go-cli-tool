@@ -14,7 +14,6 @@ import (
 )
 type FilesNameCountLineMap map[string]LineResult
 var directoryOrFilesToIgnore = []string{".git", "node_modules"}
-var totalLinesByDirectory LineResult
 
 type CountLinesAnalyzerImpl struct{}
 
@@ -65,6 +64,7 @@ func (a *CountLinesAnalyzerImpl) CountLinesByDirectory(directoryPath string) (Fi
     }
 
     linesByArchive := make(FilesNameCountLineMap)
+    var totalLinesByDirectory LineResult
 
     err := filepath.WalkDir(directoryPath, func(path string, directory fs.DirEntry, err error) error {
         if err != nil {

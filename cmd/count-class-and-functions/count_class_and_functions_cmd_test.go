@@ -59,7 +59,7 @@ func TestCountClassAndFunctionsWithFilePath(t *testing.T) {
 
 	cmd.Execute()
 
-	expectedOutput := "\x1b[34mFunctions:\x1b[0m 0\n\x1b[34mClasses:\x1b[0m 1\n"
+	expectedOutput := "\x1b[34mFunctions:\x1b[0m 20\n\x1b[34mClasses:\x1b[0m 1\n"
 
 	actualOutput := stdout.String()
 
@@ -110,7 +110,7 @@ func TestCountClassAndFunctionsCommandWithDirectoryPath(t *testing.T) {
         t.Errorf("CountClassAndFunctions() error = %v, want nil", err)
     }
 
-    expectedOutput := "\x1b[34mFunctions:test.js \x1b[0m 0\n\x1b[34mClasses:test.js \x1b[0m 1\n\x1b[34mTotal Classes in directory\x1b[0m:1\n\x1b[34mTotal Functions in directory\x1b[0m:0\n"
+    expectedOutput := "\x1b[34mFunctions:test.js \x1b[0m 20\n\x1b[34mClasses:test.js \x1b[0m 1\n\x1b[34mTotal Classes in directory\x1b[0m:1\n\x1b[34mTotal Functions in directory\x1b[0m:20\n"
 
     actualOutput := stdout.String()
 
