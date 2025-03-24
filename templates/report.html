@@ -32,6 +32,7 @@
         <label for="filter">Filter by file name:</label>
         <input type="text" id="filter" class="filter-input" onkeyup="filterTable()" placeholder="Search for files..">
     </div>
+    <h2>{{.CommandType}}: {{.TotalLines}}</h2>
     <table id="lineCountTable">
         <thead>
             <tr>
@@ -48,7 +49,6 @@
             {{end}}
         </tbody>
     </table>
-    <h2>{{.CommandType}}: {{.TotalLines}}</h2>
     <script>
         function filterTable() {
             var input, filter, table, tr, td, i, txtValue;

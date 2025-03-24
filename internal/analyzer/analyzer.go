@@ -12,3 +12,8 @@ type ClassFuncResult struct {
     Functions int
     Classes   int
 }
+
+type CountLinesAnalyzer interface {
+    CountLinesByFilePath(filePath string) LineResult
+    CountLinesByDirectory(directoryPath string) (FilesNameCountLineMap, LineResult)
+}

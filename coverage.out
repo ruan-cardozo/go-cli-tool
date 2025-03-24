@@ -1,0 +1,25 @@
+mode: set
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:18.50,22.16 2 1
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:22.16,24.10 1 1
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:26.9,26.33 1 1
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:26.33,30.10 3 1
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:32.9,34.39 2 0
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:34.39,36.10 1 0
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:36.15,38.10 1 0
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:42.101,43.42 1 0
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:43.42,46.6 1 0
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:47.5,47.118 1 0
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:50.49,54.58 2 1
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:54.58,57.6 2 1
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:59.5,59.29 1 1
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:59.29,61.6 1 1
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:63.5,63.15 1 1
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:66.38,67.51 1 1
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:67.51,70.6 2 0
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:72.5,72.52 1 1
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:72.52,75.6 2 0
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:77.5,77.15 1 1
+go-cli-tool/cmd/count-lines/count_lines_cmd.go:80.13,85.2 4 1
+go-cli-tool/cmd/root/root.go:31.20,32.45 1 0
+go-cli-tool/cmd/root/root.go:32.45,35.6 2 0
+go-cli-tool/cmd/root/root.go:38.13,42.2 3 1

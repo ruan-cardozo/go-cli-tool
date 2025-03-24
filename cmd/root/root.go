@@ -1,14 +1,17 @@
-package cmd
+package root
 
 import (
 	"fmt"
+	count_class_and_functions "go-cli-tool/cmd/count-class-and-functions"
+	count_comments "go-cli-tool/cmd/count-comments"
+	count_lines "go-cli-tool/cmd/count-lines"
 	"os"
 
 	"github.com/spf13/cobra"
 )
 
 
-var rootCmd = &cobra.Command{
+var RootCmd = &cobra.Command{
 		Use:   "go-cli-tool",
 		Short: "CLI for JavaScript code analysis",
 		Long: fmt.Sprintf(`%sA CLI tool for JavaScript code analysis!%s 
@@ -25,9 +28,15 @@ Simplify your code analysis. Use go-cli-tool!`,
 			"\033[32m", "\033[0m"),
 	}
 
-func Execute() {
-    if err := rootCmd.Execute(); err != nil {
+func RootCommand() {
+    if err := RootCmd.Execute(); err != nil {
         fmt.Println(err)
         os.Exit(1)
     }
+}
+
+func init() {
+	RootCmd.AddCommand(count_lines.CountLinesAnalyzer)
+	RootCmd.AddCommand(count_comments.CountCommentsCmd)
+	RootCmd.AddCommand(count_class_and_functions.CountClassAndFunctionsCmd)
 }
