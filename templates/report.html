@@ -32,12 +32,18 @@
         <label for="filter">Filter by file name:</label>
         <input type="text" id="filter" class="filter-input" onkeyup="filterTable()" placeholder="Search for files..">
     </div>
-    <h2>{{.CommandType}}: {{.TotalLines}}</h2>
+    <h2>{{.CommandType}}: {{.TotalByDirectory}}</h2>
     <table id="lineCountTable">
         <thead>
             <tr>
                 <th>File Name</th>
                 <th>{{.CommandType}}</th>
+                {{if .HasClasses}}
+                <th>Classes</th>
+                {{end}}
+                {{if .HasFunctions}}
+                <th>Functions</th>
+                {{end}}
             </tr>
         </thead>
         <tbody>
@@ -45,6 +51,12 @@
             <tr>
                 <td>{{.FileName}}</td>
                 <td>{{.TotalLines}}</td>
+                {{if $.HasClasses}}
+                <td>{{.Classes}}</td>
+                {{end}}
+                {{if $.HasFunctions}}
+                <td>{{.Func}}</td>
+                {{end}}
             </tr>
             {{end}}
         </tbody>

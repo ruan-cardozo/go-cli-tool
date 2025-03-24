@@ -6,9 +6,9 @@ import (
 
 	// "fmt"
 	"go-cli-tool/internal/policies"
+	"go-cli-tool/internal/utils"
 	"io/fs"
 	"os"
-	"os/user"
 	"path/filepath"
 	"slices"
 )
@@ -53,7 +53,7 @@ func (a *CountLinesAnalyzerImpl) CountLinesByDirectory(directoryPath string) (Fi
         }
     } else {
         var err error
-        directoryPath, err = expandPath(directoryPath)
+        directoryPath, err = utils.ExpandPath(directoryPath)
         if err != nil {
             panic(err)
         }
@@ -102,15 +102,4 @@ func (a *CountLinesAnalyzerImpl) CountLinesByDirectory(directoryPath string) (Fi
 
 func isEmptyLine(line string) bool {
     return len(line) == 0
-}
-
-func expandPath(path string) (string, error) {
-    if len(path) >= 2 && path[:2] == "~/" {
-        usr, err := user.Current()
-        if err != nil {
-            return "", err
-        }
-        path = filepath.Join(usr.HomeDir, path[2:])
-    }
-    return path, nil
 }
