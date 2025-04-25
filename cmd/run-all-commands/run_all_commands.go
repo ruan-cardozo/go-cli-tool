@@ -101,5 +101,5 @@ func printDirectoryResults(cmd *cobra.Command, lines, comments, classes, functio
 func init() {
     RunAllCommand.Flags().StringVarP(&utils.FilePath, "file", "f", "", "Path to the JavaScript file (must be a single file, not a directory)")
     RunAllCommand.Flags().StringVarP(&utils.DirectoryPath, "directory", "d", "", "Path to the directory containing JavaScript files. The tool will automatically expand the provided path.")
-    RunAllCommand.Flags().StringVarP(&utils.OutputFilePath, "output", "o", "", "Path to the output file. The tool will generate a comprehensive HTML report with results from all analyses. If not provided, results will be printed to the console.")
+    RunAllCommand.Flags().StringVarP(&utils.OutputFilePath, "output", "o", "", "Specify the output file path. If omitted, results will be displayed in the terminal. For directory analysis, only a summary will be shown if no output file is provided.")
 }
