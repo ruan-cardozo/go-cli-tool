@@ -59,8 +59,13 @@ case "$1" in
     run)
         run
         ;;
+    all)
+        clean
+        build
+        install
+        ;;
     *)
-        echo "Usage: $0 {build|install|clean|run}"
+        echo "Usage: $0 {build|install|clean|run|all}"
         exit 1
         ;;
 esac
