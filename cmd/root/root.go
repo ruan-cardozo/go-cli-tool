@@ -5,6 +5,7 @@ import (
 	count_class_and_functions "go-cli-tool/cmd/count-class-and-functions"
 	count_comments "go-cli-tool/cmd/count-comments"
 	count_lines "go-cli-tool/cmd/count-lines"
+	run_all_commands "go-cli-tool/cmd/run-all-commands"
 
 	"github.com/spf13/cobra"
 )
@@ -38,4 +39,5 @@ func init() {
 	RootCmd.AddCommand(count_lines.CountLinesAnalyzer)
 	RootCmd.AddCommand(count_comments.CountCommentsCmd)
 	RootCmd.AddCommand(count_class_and_functions.CountClassAndFunctionsCmd)
+	RootCmd.AddCommand(run_all_commands.RunAllCommand)
 }
