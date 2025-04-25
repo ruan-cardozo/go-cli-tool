@@ -18,7 +18,7 @@ This command performs multiple analyses simultaneously including:
 - Comment count analysis
 - Function and class count analysis
 
-Results are presented in a comprehensive HTML report, providing a complete overview
+Results are presented in terminal or json output, providing a complete overview
 of your JavaScript codebase. Use flags to customize the analysis and output format.`,
     Run: func(cmd *cobra.Command, args []string) {
 
