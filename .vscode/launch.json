@@ -7,7 +7,7 @@
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}/main.go", // Caminho completo para a ferramenta CLI
-            "args": ["count-lines", "-f", "${workspaceFolder}/javascript-tests/test.js"], // Argumento para a ferramenta CLI
+            "args": ["analyze", "-d", "${workspaceFolder}/javascript-tests/test.js", "-o", "."], // Argumento para a ferramenta CLI
             "env": {}, // Adicione variáveis de ambiente se necessário
             "cwd": "${workspaceFolder}" // Diretório de trabalho atual
         }
