@@ -46,6 +46,7 @@ var CountLinesAnalyzer = &cobra.Command{
         }
 
         if utils.OutputFilePath != "" {
+
             templates.SaveResultsToHTML(result, totalLinesStr, utils.OutputFilePath, utils.COUNT_LINES, cmd, false, false)
         } else {
             printResults(result, totalLinesByDirectory,cmd)
