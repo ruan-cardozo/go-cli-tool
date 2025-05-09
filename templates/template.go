@@ -16,97 +16,97 @@ import (
 var reportTemplate string
 
 type FileResult struct {
-    FileName   string
-    TotalLines int
-    Classes    int
-    Func       int
-    Comments   int
+	FileName   string
+	TotalLines int
+	Classes    int
+	Func       int
+	Comments   int
 }
 
 type ReportData struct {
-    Files        []FileResult
-    TotalByDirectory  string
-    CommandType  utils.CommandType
-    HasClasses   bool
-    HasFunctions bool
+	Files            []FileResult
+	TotalByDirectory string
+	CommandType      utils.CommandType
+	HasClasses       bool
+	HasFunctions     bool
 }
 
 type GenericsType interface {
-   analyzer.FilesNameCountLineMap | analyzer.ClassesAndFunctionsMap | analyzer.CommentsMap
+	analyzer.FilesNameCountLineMap | analyzer.ClassesAndFunctionsMap | analyzer.CommentsMap | analyzer.PercentResultMap
 }
 
 func SaveResultsToHTML[T GenericsType](
-    result T,
-    totalByDirectory string,
-    filePath string,
-    commandType utils.CommandType,
-    cmd *cobra.Command,
-    hasClasses bool,
-    hasFunctions bool) {
+	result T,
+	totalByDirectory string,
+	filePath string,
+	commandType utils.CommandType,
+	cmd *cobra.Command,
+	hasClasses bool,
+	hasFunctions bool) {
 
-    var files []FileResult
-    switch v := any(result).(type) {
-    case analyzer.FilesNameCountLineMap:
-        for fileName, res := range v {
-            files = append(files, FileResult{
-                FileName:   fileName,
-                TotalLines: res.TotalLines,
-            })
-        }
-    case analyzer.ClassesAndFunctionsMap:
-        for fileName, res := range v {
-            files = append(files, FileResult{
-                FileName:   fileName,
-                Classes:    res.Classes,
-                Func:       res.Functions,
-                TotalLines: res.Classes + res.Functions,
-            })
-        }
-    case analyzer.CommentsMap:
-        for fileName, res := range v {
-            files = append(files, FileResult{
-                FileName:   fileName,
-                TotalLines:   res.CommentLines,
-            })
-        }
-    }
+	var files []FileResult
+	switch v := any(result).(type) {
+	case analyzer.FilesNameCountLineMap:
+		for fileName, res := range v {
+			files = append(files, FileResult{
+				FileName:   fileName,
+				TotalLines: res.TotalLines,
+			})
+		}
+	case analyzer.ClassesAndFunctionsMap:
+		for fileName, res := range v {
+			files = append(files, FileResult{
+				FileName:   fileName,
+				Classes:    res.Classes,
+				Func:       res.Functions,
+				TotalLines: res.Classes + res.Functions,
+			})
+		}
+	case analyzer.CommentsMap:
+		for fileName, res := range v {
+			files = append(files, FileResult{
+				FileName:   fileName,
+				TotalLines: res.CommentLines,
+			})
+		}
+	}
 
-    data := ReportData{
-        Files:            files,
-        TotalByDirectory: totalByDirectory,
-        CommandType:      commandType,
-        HasClasses:       hasClasses,
-        HasFunctions:     hasFunctions,
-    }
+	data := ReportData{
+		Files:            files,
+		TotalByDirectory: totalByDirectory,
+		CommandType:      commandType,
+		HasClasses:       hasClasses,
+		HasFunctions:     hasFunctions,
+	}
 
-    tmpl, err := template.New("report").Parse(reportTemplate)
-    if err != nil {
-        fmt.Printf("Error parsing template: %s\n", err)
-        return
-    }
+	tmpl, err := template.New("report").Parse(reportTemplate)
+	if err != nil {
+		fmt.Printf("Error parsing template: %s\n", err)
+		return
+	}
 
-    // Ensure the directory exists
-    outputDir := filepath.Dir(filePath)
-    if _, err := os.Stat(outputDir); os.IsNotExist(err) {
-        err = os.MkdirAll(outputDir, os.ModePerm)
-        if err != nil {
-            fmt.Printf("Error creating directory: %s\n", err)
-            return
-        }
-    }
+	// Ensure the directory exists
+	outputDir := filepath.Dir(filePath)
+	if _, err := os.Stat(outputDir); os.IsNotExist(err) {
+		err = os.MkdirAll(outputDir, os.ModePerm)
+		if err != nil {
+			fmt.Printf("Error creating directory: %s\n", err)
+			return
+		}
+	}
 
-    filePath = filepath.Join(outputDir, "report.html")
-    file, err := os.Create(filePath)
-    if err != nil {
-        fmt.Printf("Error creating file: %s\n", err)
-        return
-    }
-    defer file.Close()
+	filePath = filepath.Join(outputDir, "report.html")
+	file, err := os.Create(filePath)
+	if err != nil {
+		fmt.Printf("Error creating file: %s\n", err)
+		return
+	}
+	defer file.Close()
 
-    err = tmpl.Execute(file, data)
-    if err != nil {
-        fmt.Printf("Error executing template: %s\n", err)
-    }
+	err = tmpl.Execute(file, data)
+	if err != nil {
+		fmt.Printf("Error executing template: %s\n", err)
+	}
 
-    fmt.Fprintf(cmd.OutOrStdout(), "\033[1;34mReport generated successfully at %s\033[0m\n", filePath)
+	fmt.Fprintf(cmd.OutOrStdout(), "\033[1;34mReport generated successfully at %s\033[0m\n", filePath)
 }
