@@ -1,0 +1,44 @@
+version: 2.1
+
+executors:
+  golang:
+    docker:
+      - image: cimg/go:1.21
+
+jobs:
+  build:
+    executor: golang
+    steps:
+      - checkout
+      - run:
+          name: Build Linux Binary
+          command: |
+            mkdir -p dist
+            GOOS=linux GOARCH=amd64 go build -o dist/go-cli-tool
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - dist
+
+  release:
+    docker:
+      - image: cibuilds/github:0.13
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Upload to GitHub Release
+          command: |
+            TAG=$(git describe --tags)
+            ghr -t ${GITHUB_TOKEN} -u <your-github-user> -r <your-repo> $TAG dist/
+
+workflows:
+  version: 2
+  build_and_release:
+    jobs:
+      - build
+      - release:
+          requires:
+            - build
