@@ -15,7 +15,6 @@ jobs:
           command: |
             mkdir -p dist
             GOOS=linux GOARCH=amd64 go build -o dist/go-cli-tool
-
       - persist_to_workspace:
           root: .
           paths:
@@ -42,3 +41,8 @@ workflows:
       - release:
           requires:
             - build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
