@@ -32,7 +32,7 @@ jobs:
           name: Upload to GitHub Release
           command: |
             TAG=$(git describe --tags)
-            ghr -t ${GITHUB_TOKEN} -u <your-github-user> -r <your-repo> $TAG dist/
+            ghr -t ${GITHUB_TOKEN} -u ruan-cardozo -r go-cli-tool $TAG dist/
 
 workflows:
   version: 2
