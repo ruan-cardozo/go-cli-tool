@@ -14,7 +14,11 @@ jobs:
           name: Build Linux Binary
           command: |
             mkdir -p dist
-            GOOS=linux GOARCH=amd64 go build -o dist/go-cli-tool
+            GOOS=linux GOARCH=amd64 go build -o dist/go-cli-tool-linux
+      - run:
+          name: Build Windows Binary
+          command: |
+            GOOS=windows GOARCH=amd64 go build -o dist/go-cli-tool-windows.exe
       - persist_to_workspace:
           root: .
           paths:
