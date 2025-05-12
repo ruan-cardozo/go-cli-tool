@@ -69,28 +69,31 @@ Este projeto é uma ferramenta de análise de código JavaScript que realiza mú
 
 ### Passos para Instalação
 
-1. Clone o repositório:
+1. Acesse a página de releases do projeto no GitHub:
+   [Releases do Go CLI Tool](https://github.com/ruan-cardozo/go-cli-tool/releases)
+
+2. Baixe o binário mais recente para o seu sistema operacional:
+   - Para Linux: `go-cli-tool`
+   - Para Windows: `go-cli-tool.exe`
+
+3. Torne o binário executável (apenas para Linux):
    ```bash
-   git clone https://github.com/ruan-cardozo/go-cli-tool
+   chmod +x go-cli-tool
    ```
-2. Navegue até o diretório do projeto:
+4. Mova o binário para um diretório no seu `PATH` (opcional, mas recomendado):
    ```bash
-   cd go-cli-tool
+   sudo mv go-cli-tool-linux-amd64 /usr/local/bin/go-cli-tool
    ```
-3. Compile o projeto:
+5. Verifique se a instalação foi bem-sucedida:
    ```bash
-   go build -o go-cli-tool
-   ```
-4. Execute o binário:
-   ```bash
-   ./go-cli-tool
+   go-cli-tool version
    ```
 
 ---
 
 ## 📊 Exemplos de Uso
 
-<!-- Mostre exemplos de como usar o projeto, incluindo comandos e saídas esperadas. -->
+Após instalar o CLI, você pode começar a utilizá-lo. Aqui estão alguns exemplos:
 
 ```bash
 # Comando de help do cli para facilitar a utilização 
