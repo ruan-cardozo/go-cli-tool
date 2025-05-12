@@ -5,10 +5,11 @@ import (
 	count_class_and_functions "go-cli-tool/cmd/count-class-and-functions"
 	count_comments "go-cli-tool/cmd/count-comments"
 	count_lines "go-cli-tool/cmd/count-lines"
+	count_percent "go-cli-tool/cmd/count-percent-lines"
 	dependencies "go-cli-tool/cmd/dependencies"
 	identation "go-cli-tool/cmd/identation-command"
-	count_percent "go-cli-tool/cmd/count-percent-lines"
 	run_all_commands "go-cli-tool/cmd/run-all-commands"
+	"go-cli-tool/cmd/version"
 
 	"github.com/spf13/cobra"
 )
@@ -46,4 +47,5 @@ func init() {
 	RootCmd.AddCommand(dependencies.DependenciesAnalyzerCmd)
 	RootCmd.AddCommand(count_percent.CountPercentCmd)
 	RootCmd.AddCommand(run_all_commands.RunAllCommand)
+	RootCmd.AddCommand(version.VersionCommand())
 }

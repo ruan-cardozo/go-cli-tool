@@ -11,7 +11,11 @@ export PATH=$PATH:/usr/local/go/bin
 # Função para compilar o projeto
 build() {
     echo "Building the project..."
-    go build -o $BINARY_NAME
+
+    VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "dev")
+
+    go build -ldflags "-X go-cli-tool/cmd/version.Version=${VERSION#v}" -o $BINARY_NAME
+
     if [ $? -ne 0 ]; then
         echo "Build failed!"
         exit 1
