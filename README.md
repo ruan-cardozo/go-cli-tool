@@ -109,7 +109,7 @@ Este projeto é uma ferramenta de análise de código JavaScript que realiza mú
 
 <!-- Liste os contribuidores do projeto. -->
 
-| [<img loading="lazy" src="https://github.com/ruan-cardozo.png" width=115><br><sub>Ruan Cardozo</sub>](https://github.com/ruan-cardozo) |  [<img loading="lazy" src="https://github.com/guimachado1.png" width=115><br><sub>Guilherme Machado</sub>](https://github.com/guimachado1) |  [<img loading="lazy" src="https://github.com/guilherme-kopsch.png" width=115><br><sub>Guilherme kopsch</sub>](https://github.com/guilherme-kopsch) |
+| [<img loading="lazy" src="https://github.com/ruan-cardozo.png" width=115><br><sub>Ruan Cardozo</sub>](https://github.com/ruan-cardozo) |  [<img loading="lazy" src="https://github.com/guimachado1.png" width=115><br><sub>Guilherme Machado</sub>](https://github.com/guimachado1) |  [<img loading="lazy" src="https://github.com/guilherme-kopsch.png" width=115><br><sub>Guilherme Kopsch</sub>](https://github.com/guilherme-kopsch) |
 | :---: | :---: | :---: |
 
 ---
