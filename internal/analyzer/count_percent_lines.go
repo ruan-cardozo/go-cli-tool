@@ -3,32 +3,36 @@ package analyzer
 import (
 	"bufio"
 	"fmt"
-	"go-cli-tool/internal/policies"
-	"go-cli-tool/internal/utils"
-	"io/fs"
 	"os"
 	"path/filepath"
-	"slices"
 )
 
-// Definindo a interface CountPercentAnalyzer
+var ignoreList = []string{"node_modules", ".git", "dist", "build", ".DS_Store"}
+
 type CountPercentAnalyzer interface {
 	CountPercentByFilePath(filePath string) PercentResult
 	CountCommentsByDirectory(directoryPath string) (PercentResultMap, PercentResult)
 }
 
-// Implementando a interface CountPercentAnalyzer
 type CountPercentAnalyzerImpl struct{}
 
-// Estrutura para armazenar o resultado do cálculo
 type PercentResult struct {
 	TotalLines        int
 	CommentLines      int
 	CommentPercentage float64
-	TotalComments     int
 }
 
-// Função para contar o percentual de comentários em um arquivo
+type PercentResultMap map[string]PercentResult
+
+func shouldIgnore(name string) bool {
+	for _, item := range ignoreList {
+		if item == name {
+			return true
+		}
+	}
+	return false
+}
+
 func (a *CountPercentAnalyzerImpl) CountPercentByFilePath(filePath string) PercentResult {
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -39,11 +43,12 @@ func (a *CountPercentAnalyzerImpl) CountPercentByFilePath(filePath string) Perce
 	var result PercentResult
 	scanner := bufio.NewScanner(file)
 	inBlockComment := false
+
 	for scanner.Scan() {
 		line := scanner.Text()
 		result.TotalLines++
 
-		if isComment(line, &inBlockComment) {
+		if isComment(line, &inBlockComment) { // Usando a função que já existe no pacote
 			result.CommentLines++
 		}
 	}
@@ -55,7 +60,6 @@ func (a *CountPercentAnalyzerImpl) CountPercentByFilePath(filePath string) Perce
 	return result
 }
 
-// Função para contar os comentários em todos os arquivos de um diretório
 func (a *CountPercentAnalyzerImpl) CountCommentsByDirectory(directoryPath string) (PercentResultMap, PercentResult) {
 	if directoryPath == "." {
 		var err error
@@ -63,38 +67,34 @@ func (a *CountPercentAnalyzerImpl) CountCommentsByDirectory(directoryPath string
 		if err != nil {
 			panic(err)
 		}
-	} else {
-		var err error
-		directoryPath, err = utils.ExpandPath(directoryPath)
-		if err != nil {
-			panic(err)
-		}
 	}
 
-	// Verificar se o diretório existe
-	if _, err := os.Stat(directoryPath); os.IsNotExist(err) {
-		panic(fmt.Sprintf("directory %s does not exist", directoryPath))
+	absPath, err := filepath.Abs(directoryPath)
+	if err != nil {
+		panic(err)
+	}
+
+	if _, err := os.Stat(absPath); os.IsNotExist(err) {
+		panic(fmt.Sprintf("directory %s does not exist", absPath))
 	}
 
 	linesByArchive := make(PercentResultMap)
 
-	err := filepath.WalkDir(directoryPath, func(path string, directory fs.DirEntry, err error) error {
+	err = filepath.Walk(absPath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
 
-		fileOrDirectoryName := directory.Name()
-		fileExtension := filepath.Ext(fileOrDirectoryName)
-
-		if slices.Contains(directoryOrFilesToIgnore, fileOrDirectoryName) {
-			if directory.IsDir() {
+		if shouldIgnore(info.Name()) {
+			if info.IsDir() {
 				return filepath.SkipDir
 			}
 			return nil
 		}
 
-		if policies.IsJSFileExtension(fileExtension) {
-			linesByArchive[fileOrDirectoryName] = a.CountPercentByFilePath(path)
+		if filepath.Ext(path) == ".js" {
+			result := a.CountPercentByFilePath(path)
+			linesByArchive[path] = result
 		}
 
 		return nil
@@ -104,20 +104,15 @@ func (a *CountPercentAnalyzerImpl) CountCommentsByDirectory(directoryPath string
 		panic(err)
 	}
 
-	var totalCommentsByDirectory PercentResult
-
-	for result := range linesByArchive {
-		file := linesByArchive[result]
-		totalCommentsByDirectory.CommentLines += file.CommentLines
-		totalCommentsByDirectory.TotalLines += file.TotalLines
-		totalCommentsByDirectory.TotalComments += file.CommentLines
+	var total PercentResult
+	for _, fileResult := range linesByArchive {
+		total.CommentLines += fileResult.CommentLines
+		total.TotalLines += fileResult.TotalLines
 	}
 
-	if totalCommentsByDirectory.TotalLines > 0 {
-		totalCommentsByDirectory.CommentPercentage = float64(totalCommentsByDirectory.CommentLines) / float64(totalCommentsByDirectory.TotalLines) * 100
+	if total.TotalLines > 0 {
+		total.CommentPercentage = float64(total.CommentLines) / float64(total.TotalLines) * 100
 	}
 
-	return linesByArchive, totalCommentsByDirectory
+	return linesByArchive, total
 }
-
-type PercentResultMap map[string]PercentResult
