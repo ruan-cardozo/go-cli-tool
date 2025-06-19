@@ -29,7 +29,7 @@ Este projeto é uma ferramenta de análise de código JavaScript que realiza mú
 - Vscode
 - Shell Script
 - Git e Github
-- CircleCI
+- CircleCI/Jenkins
 
 ---
 
