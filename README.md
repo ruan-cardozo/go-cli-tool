@@ -39,6 +39,8 @@ Este projeto é uma ferramenta de análise de código JavaScript que realiza mú
   - `count-class-and-functions/`: Comando para contar classes e funções.
   - `count-comments/`: Comando para contar comentários.
   - `count-lines/`: Comando para contar linhas de código.
+  - `count-percent-lines/`: Comando para contar percentual de código comentado.
+  - `count-average-funcion/`: Comando para contar média de tamanho das funções.
   - `dependencies/`: Comando para analisar dependências externas e nativas.
   - `run-all-commands/`: Comando para executar todas as análises de uma vez.
 

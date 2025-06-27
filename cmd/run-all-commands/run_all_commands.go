@@ -21,6 +21,7 @@ This command performs multiple analyses simultaneously including:
 - Function and class count analysis
 - Indentation analysis
 - Code Comment Percentage Analysis
+- Average Function Size Analysis
 
 Results are presented in terminal or json output, providing a complete overview
 of your JavaScript codebase. Use flags to customize the analysis and output format.`,
@@ -32,12 +33,13 @@ of your JavaScript codebase. Use flags to customize the analysis and output form
 		}
 
 		lineAnalyzer, commentAnalyzer, classFuncAnalyzer, indentationAnalyzer, dependenciesAnalyzer := initializeAnalyzers()
-		percentAnalyzer := &analyzer.CountPercentAnalyzerImpl{} // Adicionado o novo analyzer
+		percentAnalyzer := &analyzer.CountPercentAnalyzerImpl{}
+		averageFunctionAnalyzer := &analyzer.AverageFunctionAnalyzerImpl{}
 
 		if utils.FilePath != "" {
-			handleFileAnalysis(cmd, lineAnalyzer, commentAnalyzer, classFuncAnalyzer, indentationAnalyzer, dependenciesAnalyzer, percentAnalyzer)
+			handleFileAnalysis(cmd, lineAnalyzer, commentAnalyzer, classFuncAnalyzer, indentationAnalyzer, dependenciesAnalyzer, percentAnalyzer, averageFunctionAnalyzer)
 		} else {
-			handleDirectoryAnalysis(cmd, lineAnalyzer, commentAnalyzer, classFuncAnalyzer, indentationAnalyzer, dependenciesAnalyzer, percentAnalyzer)
+			handleDirectoryAnalysis(cmd, lineAnalyzer, commentAnalyzer, classFuncAnalyzer, indentationAnalyzer, dependenciesAnalyzer, percentAnalyzer, averageFunctionAnalyzer)
 		}
 	},
 }
@@ -52,11 +54,12 @@ func initializeAnalyzers() (*analyzer.CountLinesAnalyzerImpl, *analyzer.CountCom
 }
 
 // Handles file-level analysis
-func handleFileAnalysis(cmd *cobra.Command, lineAnalyzer *analyzer.CountLinesAnalyzerImpl, commentAnalyzer *analyzer.CountCommentsAnalyzerImpl, classFuncAnalyzer *analyzer.CountClassAndFunctionsImpl, indentationAnalyzer *analyzer.IdentationAnalyzerImpl, dependenciesAnalyzer *analyzer.CountDependenciesAnalyzerImpl, percentAnalyzer *analyzer.CountPercentAnalyzerImpl) {
+func handleFileAnalysis(cmd *cobra.Command, lineAnalyzer *analyzer.CountLinesAnalyzerImpl, commentAnalyzer *analyzer.CountCommentsAnalyzerImpl, classFuncAnalyzer *analyzer.CountClassAndFunctionsImpl, indentationAnalyzer *analyzer.IdentationAnalyzerImpl, dependenciesAnalyzer *analyzer.CountDependenciesAnalyzerImpl, percentAnalyzer *analyzer.CountPercentAnalyzerImpl, averageFunctionAnalyzer *analyzer.AverageFunctionAnalyzerImpl) {
 	lineCount := lineAnalyzer.CountLinesByFilePath(utils.FilePath)
 	commentCount := commentAnalyzer.CountCommentsByFilePath(utils.FilePath)
 	classAndFunctionResult := classFuncAnalyzer.CountClassesAndFunctionsByFilePath(utils.FilePath)
-	percentResult := percentAnalyzer.CountPercentByFilePath(utils.FilePath) // Nova análise
+	percentResult := percentAnalyzer.CountPercentByFilePath(utils.FilePath)
+	averageFunctionSize := averageFunctionAnalyzer.CalculateAverageFunctionSize(utils.FilePath)
 
 	tempFilePath := utils.FilePath
 	tempDirPath := utils.DirectoryPath
@@ -69,19 +72,20 @@ func handleFileAnalysis(cmd *cobra.Command, lineAnalyzer *analyzer.CountLinesAna
 
 	if utils.OutputFilePath == "" {
 		printFileResults(cmd, utils.FilePath, lineCount.TotalLines, commentCount.CommentLines,
-			classAndFunctionResult.Classes, classAndFunctionResult.Functions, percentResult.CommentPercentage, indentResults, dependencieResultMap)
+			classAndFunctionResult.Classes, classAndFunctionResult.Functions, percentResult.CommentPercentage, indentResults, dependencieResultMap, averageFunctionSize)
 	} else {
 		generateJSONOutput(cmd, utils.FilePath, lineCount.TotalLines, commentCount.CommentLines,
-			classAndFunctionResult.Classes, classAndFunctionResult.Functions, percentResult.CommentPercentage, indentResults, dependencieResultMap)
+			classAndFunctionResult.Classes, classAndFunctionResult.Functions, percentResult.CommentPercentage, indentResults, dependencieResultMap, averageFunctionSize)
 	}
 }
 
 // Handles directory-level analysis
-func handleDirectoryAnalysis(cmd *cobra.Command, lineAnalyzer *analyzer.CountLinesAnalyzerImpl, commentAnalyzer *analyzer.CountCommentsAnalyzerImpl, classFuncAnalyzer *analyzer.CountClassAndFunctionsImpl, indentationAnalyzer *analyzer.IdentationAnalyzerImpl, dependenciesAnalyzer *analyzer.CountDependenciesAnalyzerImpl, percentAnalyzer *analyzer.CountPercentAnalyzerImpl) {
+func handleDirectoryAnalysis(cmd *cobra.Command, lineAnalyzer *analyzer.CountLinesAnalyzerImpl, commentAnalyzer *analyzer.CountCommentsAnalyzerImpl, classFuncAnalyzer *analyzer.CountClassAndFunctionsImpl, indentationAnalyzer *analyzer.IdentationAnalyzerImpl, dependenciesAnalyzer *analyzer.CountDependenciesAnalyzerImpl, percentAnalyzer *analyzer.CountPercentAnalyzerImpl, averageFunctionAnalyzer *analyzer.AverageFunctionAnalyzerImpl) {
 	lineResults, totalLines := lineAnalyzer.CountLinesByDirectory(utils.DirectoryPath)
 	commentResults, totalComments := commentAnalyzer.CountCommentsByDirectory(utils.DirectoryPath)
 	classFuncResults, totalClassesAndFunctions := classFuncAnalyzer.CountClassesAndFunctionsByDirectory(utils.DirectoryPath)
-	_, percentResults := percentAnalyzer.CountCommentsByDirectory(utils.DirectoryPath) // Nova análise
+	_, percentResults := percentAnalyzer.CountCommentsByDirectory(utils.DirectoryPath)
+	_, overallAverage := averageFunctionAnalyzer.CalculateAverageFunctionSizeByDirectory(utils.DirectoryPath) // Calcule a média do tamanho das funções por diretório
 
 	tempFilePath := utils.FilePath
 	tempDirPath := utils.DirectoryPath
@@ -97,10 +101,10 @@ func handleDirectoryAnalysis(cmd *cobra.Command, lineAnalyzer *analyzer.CountLin
 			classFuncResults, percentResults, indentResults, dependencieResultMap)
 	} else if utils.OutputFilePath == "" {
 		printDirectoryResults(cmd, totalLines.TotalLines, totalComments.TotalComments,
-			totalClassesAndFunctions.Classes, totalClassesAndFunctions.Functions, percentResults.CommentPercentage, indentResults)
+			totalClassesAndFunctions.Classes, totalClassesAndFunctions.Functions, percentResults.CommentPercentage, indentResults, overallAverage)
 	} else {
 		generateJSONOutput(cmd, utils.DirectoryPath, totalLines.TotalLines, totalComments.TotalComments,
-			totalClassesAndFunctions.Classes, totalClassesAndFunctions.Functions, percentResults.CommentPercentage, indentResults, dependencieResultMap)
+			totalClassesAndFunctions.Classes, totalClassesAndFunctions.Functions, percentResults.CommentPercentage, indentResults, dependencieResultMap, overallAverage)
 	}
 }
 
@@ -178,7 +182,7 @@ func outputJSON(cmd *cobra.Command, outputPath string, data interface{}) {
 	}
 }
 
-func generateJSONOutput(cmd *cobra.Command, filePath string, lineCount int, commentCount int, classes int, functions int, commentPercentage float64, indentResults map[string]interface{}, dependencieResults map[string]interface{}) {
+func generateJSONOutput(cmd *cobra.Command, filePath string, lineCount int, commentCount int, classes int, functions int, commentPercentage float64, indentResults map[string]interface{}, dependencieResults map[string]interface{}, averageFunctionSize float64) {
 	// Limpeza de dados desnecessários em indentResults
 	if indentResults != nil {
 		delete(indentResults, "path")
@@ -189,13 +193,14 @@ func generateJSONOutput(cmd *cobra.Command, filePath string, lineCount int, comm
 	result := map[string]interface{}{
 		"directory": filePath,
 		"summary": map[string]interface{}{
-			"lines":              lineCount,
-			"comments":           commentCount,
-			"comment_percentage": fmt.Sprintf("%.2f%%", commentPercentage),
-			"classes":            classes,
-			"functions":          functions,
-			"dependencies":       consolidateDependencies(dependencieResults),
-			"indentation":        indentResults,
+			"lines":                 lineCount,
+			"comments":              commentCount,
+			"comment_percentage":    fmt.Sprintf("%.2f%%", commentPercentage),
+			"classes":               classes,
+			"functions":             functions,
+			"average_function_size": fmt.Sprintf("%.2f", averageFunctionSize),
+			"dependencies":          consolidateDependencies(dependencieResults),
+			"indentation":           indentResults,
 		},
 	}
 
@@ -326,14 +331,15 @@ func generateDetailedJSONOutput(cmd *cobra.Command, directoryPath string, lineRe
 	}
 }
 
-func printFileResults(cmd *cobra.Command, filePath string, lines, comments, classes, functions int, commentPercentage float64, indentResults map[string]interface{}, dependenciesResults map[string]interface{}) {
+func printFileResults(cmd *cobra.Command, filePath string, lines, comments, classes, functions int, commentPercentage float64, indentResults map[string]interface{}, dependenciesResults map[string]interface{}, averageFunctionSize float64) {
 	fmt.Fprintf(cmd.OutOrStdout(), "\n%s=== Analysis Results for %s ===%s\n",
 		utils.BLUE, filePath, utils.RESET_COLOR)
 	fmt.Fprintf(cmd.OutOrStdout(), "Total Lines: %s%d%s\n", utils.GREEN, lines, utils.RESET_COLOR)
 	fmt.Fprintf(cmd.OutOrStdout(), "Comment Lines: %s%d%s\n", utils.GREEN, comments, utils.RESET_COLOR)
-	fmt.Fprintf(cmd.OutOrStdout(), "Comment Percentage: %s%.2f%%%s\n", utils.GREEN, commentPercentage, utils.RESET_COLOR) // Nova linha
+	fmt.Fprintf(cmd.OutOrStdout(), "Comment Percentage: %s%.2f%%%s\n", utils.GREEN, commentPercentage, utils.RESET_COLOR)
 	fmt.Fprintf(cmd.OutOrStdout(), "Classes: %s%d%s\n", utils.GREEN, classes, utils.RESET_COLOR)
 	fmt.Fprintf(cmd.OutOrStdout(), "Functions: %s%d%s\n", utils.GREEN, functions, utils.RESET_COLOR)
+	fmt.Fprintf(cmd.OutOrStdout(), "Average Function Size: %s%.2f%s\n", utils.GREEN, averageFunctionSize, utils.RESET_COLOR)
 
 	if stats, ok := indentResults["stats"].(analyzer.IndentResult); ok {
 		fmt.Fprintf(cmd.OutOrStdout(), "\n%s=== Indentation Analysis ===%s\n", utils.BLUE, utils.RESET_COLOR)
@@ -354,7 +360,7 @@ func printFileResults(cmd *cobra.Command, filePath string, lines, comments, clas
 	}
 }
 
-func printDirectoryResults(cmd *cobra.Command, lines, comments, classes, functions int, commentPercentage float64, indentResults map[string]interface{}) {
+func printDirectoryResults(cmd *cobra.Command, lines, comments, classes, functions int, commentPercentage float64, indentResults map[string]interface{}, overallAverage float64) {
 	fmt.Fprintf(cmd.OutOrStdout(), "\n%s=== Directory Analysis Summary ===%s\n",
 		utils.BLUE, utils.RESET_COLOR)
 	fmt.Fprintf(cmd.OutOrStdout(), "Total Lines: %s%d%s\n", utils.GREEN, lines, utils.RESET_COLOR)
@@ -362,7 +368,7 @@ func printDirectoryResults(cmd *cobra.Command, lines, comments, classes, functio
 	fmt.Fprintf(cmd.OutOrStdout(), "Comment Percentage: %s%.2f%%%s\n", utils.GREEN, commentPercentage, utils.RESET_COLOR) // Nova linha
 	fmt.Fprintf(cmd.OutOrStdout(), "Classes: %s%d%s\n", utils.GREEN, classes, utils.RESET_COLOR)
 	fmt.Fprintf(cmd.OutOrStdout(), "Functions: %s%d%s\n", utils.GREEN, functions, utils.RESET_COLOR)
-
+	fmt.Fprintf(cmd.OutOrStdout(), "Average function size in directory: %s%.2f lines%s\n", utils.GREEN, overallAverage, utils.RESET_COLOR)
 	fmt.Fprintf(cmd.OutOrStdout(), "\n%s=== Indentation Analysis Summary ===%s\n", utils.BLUE, utils.RESET_COLOR)
 
 	if files, ok := indentResults["files"].([]map[string]interface{}); ok && len(files) > 0 {
@@ -407,7 +413,7 @@ func printDirectoryResults(cmd *cobra.Command, lines, comments, classes, functio
 
 func init() {
 	RunAllCommand.Flags().StringVarP(&utils.FilePath, "file", "f", "", "Path to the JavaScript file (must be a single file, not a directory)")
-	RunAllCommand.Flags().StringVarP(&utils.DirectoryPath, "directory", "d", "", "Path to the directory containing JavaScript files. The tool will automatically expand the provided path.")
+	RunAllCommand.Flags().StringVarP(&utils.DirectoryPath, "directory", "d", "", "Path to the directory containing JavaScript files")
 	RunAllCommand.Flags().StringVarP(&utils.OutputFilePath, "output", "o", "", "Specify the output file path. If omitted, results will be displayed in the terminal.")
 	RunAllCommand.Flags().BoolVar(&utils.Detailed, "detailed", false, "Show detailed analysis, including per-file information.")
 }
