@@ -8,49 +8,47 @@ import (
 	"testing"
 )
 
-
-
 func TestMain(m *testing.M) {
-    // Setup code before running tests
+	// Setup code before running tests
 	tests.ResetGlobals()
 
-    // Run tests
-    code := m.Run()
+	// Run tests
+	code := m.Run()
 
-    // Cleanup code after running tests
+	// Cleanup code after running tests
 	tests.ResetGlobals()
 
-    // Exit with the test code
-    os.Exit(code)
+	// Exit with the test code
+	os.Exit(code)
 }
 
 func TestCountLinesCommandWithNoArgs(t *testing.T) {
 
 	tests.ResetGlobals()
 
-    // create the count lines command
-    cmd := count_lines.CountLinesAnalyzer
+	// create the count lines command
+	cmd := count_lines.CountLinesAnalyzer
 
-    // redirect the stdout to a buffer to capture the output
-    var stdout bytes.Buffer
-    cmd.SetOut(&stdout)
+	// redirect the stdout to a buffer to capture the output
+	var stdout bytes.Buffer
+	cmd.SetOut(&stdout)
 
-    // set the args
-    cmd.SetArgs([]string{})
+	// set the args
+	cmd.SetArgs([]string{})
 
-    // execute the count lines command w/ args
+	// execute the count lines command w/ args
 	cmd.Execute()
 
-    // check the output
-    expectedOutput := "Please provide the path to the JavaScript file using the -f flag or use the -d flag to provide the path to the directory containing the JavaScript files.\n"
+	// check the output
+	expectedOutput := "Please provide the path to the JavaScript file using the -f flag or use the -d flag to provide the path to the directory containing the JavaScript files.\n"
 
-    actualOutput := stdout.String()
+	actualOutput := stdout.String()
 
-    if actualOutput != expectedOutput {
-        t.Errorf("CountLinesCommand() = %v, want %v", actualOutput, expectedOutput)
-        t.Logf("Actual Output: %q", actualOutput)
-        t.Logf("Expected Output: %q", expectedOutput)
-    }
+	if actualOutput != expectedOutput {
+		t.Errorf("CountLinesCommand() = %v, want %v", actualOutput, expectedOutput)
+		t.Logf("Actual Output: %q", actualOutput)
+		t.Logf("Expected Output: %q", expectedOutput)
+	}
 }
 
 func TestCountLinesCommandWithFilePath(t *testing.T) {
@@ -62,8 +60,8 @@ func TestCountLinesCommandWithFilePath(t *testing.T) {
 
 	// redirect the stdout to a buffer to capture the output
 	var stdout bytes.Buffer
-	cmd.SetOut(&stdout) 
-    cmd.SetErr(&stdout)
+	cmd.SetOut(&stdout)
+	cmd.SetErr(&stdout)
 
 	// set the args
 	cmd.SetArgs([]string{"-f", "../../javascript-tests/test.js"})
@@ -92,7 +90,7 @@ func TestCountLinesCommandWithWrongFilePathExtension(t *testing.T) {
 
 	// redirect the stdout to a buffer to capture the output
 	var stdout bytes.Buffer
-	cmd.SetOut(&stdout) 
+	cmd.SetOut(&stdout)
 
 	// set the args
 	cmd.SetArgs([]string{"-f", "../../main.go"})
@@ -116,36 +114,36 @@ func TestCountLinesCommandWithDirectoryPath(t *testing.T) {
 
 	tests.ResetGlobals()
 
-    // create the count lines command
-    cmd := count_lines.CountLinesAnalyzer
+	// create the count lines command
+	cmd := count_lines.CountLinesAnalyzer
 
-    // redirect the stdout to a buffer to capture the output
-    var stdout bytes.Buffer
-    cmd.SetOut(&stdout) 
-    cmd.SetErr(&stdout)
+	// redirect the stdout to a buffer to capture the output
+	var stdout bytes.Buffer
+	cmd.SetOut(&stdout)
+	cmd.SetErr(&stdout)
 
-    // set the args
-    cmd.SetArgs([]string{"-d", "../../javascript-tests"})
+	// set the args
+	cmd.SetArgs([]string{"-d", "../../javascript-tests"})
 
-    // execute the count lines command w/ args
-    if err := cmd.Execute(); err != nil {
-        t.Errorf("CountLinesCommand() error = %v, want nil", err)
-    }
+	// execute the count lines command w/ args
+	if err := cmd.Execute(); err != nil {
+		t.Errorf("CountLinesCommand() error = %v, want nil", err)
+	}
 
-    // check the output
-    expectedOutput := "\x1b[34m Total lines in test.js:\x1b[0m 157\n\x1b[34mTotal lines in directory:\x1b[0m 157\n"
+	// check the output
+	expectedOutput := "\x1b[34m Total lines in test.js:\x1b[0m 157\n\x1b[34mTotal lines in directory:\x1b[0m 157\n"
 
-    actualOutput := stdout.String()
+	actualOutput := stdout.String()
 
-    if actualOutput != expectedOutput {
-        t.Errorf("CountLinesCommand() = %v, want %v", actualOutput, expectedOutput)
-        t.Logf("Actual Output: %q", actualOutput)
-        t.Logf("Expected Output: %q", expectedOutput)
-    }
+	if actualOutput != expectedOutput {
+		t.Errorf("CountLinesCommand() = %v, want %v", actualOutput, expectedOutput)
+		t.Logf("Actual Output: %q", actualOutput)
+		t.Logf("Expected Output: %q", expectedOutput)
+	}
 }
 
 func TestCountLinesCommandWithWrongDirectoryPath(t *testing.T) {
-	
+
 	tests.ResetGlobals()
 
 	// create the count lines command
@@ -153,7 +151,7 @@ func TestCountLinesCommandWithWrongDirectoryPath(t *testing.T) {
 
 	// redirect the stdout to a buffer to capture the output
 	var stdout bytes.Buffer
-	cmd.SetOut(&stdout) 
+	cmd.SetOut(&stdout)
 
 	// set the args
 	cmd.SetArgs([]string{"-d", "../../main.go"})
@@ -182,7 +180,7 @@ func TestCountLinesCommandWithDirectoryWihtoutJavascriptFiles(t *testing.T) {
 
 	// redirect the stdout to a buffer to capture the output
 	var stdout bytes.Buffer
-	cmd.SetOut(&stdout) 
+	cmd.SetOut(&stdout)
 
 	// set the args
 	cmd.SetArgs([]string{"-d", "../root"})
@@ -211,7 +209,7 @@ func TestCountLinesCommandWithValidDirectoryAndGeneratingReportHTML(t *testing.T
 
 	// redirect the stdout to a buffer to capture the output
 	var stdout bytes.Buffer
-	cmd.SetOut(&stdout) 
+	cmd.SetOut(&stdout)
 
 	// set the args
 	cmd.SetArgs([]string{"-d", "../../javascript-tests", "-o", "."})

@@ -6,6 +6,7 @@ import (
 	count_class_and_functions "go-cli-tool/cmd/count-class-and-functions"
 	count_comments "go-cli-tool/cmd/count-comments"
 	count_lines "go-cli-tool/cmd/count-lines"
+	count_methods "go-cli-tool/cmd/count-methods"
 	count_percent "go-cli-tool/cmd/count-percent-lines"
 	dependencies "go-cli-tool/cmd/dependencies"
 	identation "go-cli-tool/cmd/identation-command"
@@ -44,6 +45,7 @@ func RootCommand() {
 }
 
 func init() {
+	RootCmd.AddCommand(count_methods.CountMethodsAnalyzer)
 	RootCmd.AddCommand(count_lines.CountLinesAnalyzer)
 	RootCmd.AddCommand(count_comments.CountCommentsCmd)
 	RootCmd.AddCommand(count_class_and_functions.CountClassAndFunctionsCmd)

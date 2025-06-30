@@ -118,7 +118,7 @@ class Server {
         this.app.post('/api/verify-signature', authenticateToken, signatureController.verifySignature);
     }
 
-	generateKeyPair() {
+	_generateKeyPair() {
         const keysDirectory = path.resolve(process.env.KEYS_DIRECTORY);
         const privateKeyPath = path.join(keysDirectory, process.env.PRIVATE_KEY_PATH);
         const publicKeyPath = path.join(keysDirectory, process.env.PUBLIC_KEY_PATH);
@@ -142,7 +142,7 @@ class Server {
     }
 	
 	//testes
-	encrypt(text) {
+	_encrypt(text) {
         let iv = crypto.randomBytes(IV_LENGTH);
         let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY), iv);
         let encrypted = cipher.update(text);
