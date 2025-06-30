@@ -236,7 +236,6 @@ func outputJSON(cmd *cobra.Command, outputPath string, data interface{}) {
 }
 
 func generateJSONOutput(cmd *cobra.Command, params AnalysisParams) {
-
 	if params.IndentResults != nil {
 		delete(params.IndentResults, "path")
 		delete(params.IndentResults, "filename")
@@ -250,7 +249,7 @@ func generateJSONOutput(cmd *cobra.Command, params AnalysisParams) {
 		"functions":             params.Functions,
 		"public_methods":        params.MethodCountResult.Public,
 		"private_methods":       params.MethodCountResult.Private,
-		"average_function_size": fmt.Sprintf("%.2f", params.AverageFunctionSize),
+		"average_function_size": fmt.Sprintf("%.4f", params.AverageFunctionSize),
 		"dependencies":          consolidateDependencies(params.DependenciesResults),
 		"indentation":           params.IndentResults,
 	}
@@ -264,7 +263,7 @@ func generateJSONOutput(cmd *cobra.Command, params AnalysisParams) {
 		result["directory"] = params.DirectoryPath
 		summaryData["public_methods"] = params.TotalMethodCount.Public
 		summaryData["private_methods"] = params.TotalMethodCount.Private
-		summaryData["average_function_size"] = fmt.Sprintf("%.2f", params.OverallAverageSize)
+		summaryData["average_function_size"] = fmt.Sprintf("%.4f", params.OverallAverageSize)
 	}
 
 	outputJSON(cmd, params.OutputFilePath, result)
