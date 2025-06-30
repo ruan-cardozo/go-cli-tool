@@ -95,7 +95,7 @@ class Server {
 		this.app.delete('/api/employees/:id', authenticateToken, employeeController.deleteEmployee);
 	}
 
-	pdfRoutes() {
+	_pdfRoutes() {
 		const reportController = ReportController.getInstance();
 
 		this.app.post('/api/reports', authenticateToken, reportController.createReport);
