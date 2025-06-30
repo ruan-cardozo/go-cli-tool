@@ -11,6 +11,7 @@ import (
 	dependencies "go-cli-tool/cmd/dependencies"
 	identation "go-cli-tool/cmd/identation-command"
 	run_all_commands "go-cli-tool/cmd/run-all-commands"
+	send_metrics "go-cli-tool/cmd/send-metrics"
 	"go-cli-tool/cmd/version"
 
 	"github.com/spf13/cobra"
@@ -21,20 +22,24 @@ var RootCmd = &cobra.Command{
 	Short: "CLI for JavaScript code analysis",
 	Long: fmt.Sprintf(`%sA CLI tool for JavaScript code analysis!%s 
 With this tool, you can easily analyze your JavaScript files and get detailed information, including:
-    - %sTotal line count%s
-    - %sNumber of comment lines%s
-    - %sNumber of functions%s
-    - %sCount code percentage%s
-    - %sAverage function size%s
+	- %sTotal line count%s
+	- %sNumber of comment lines%s
+	- %sNumber of functions%s
+	- %sCount code percentage%s
+	- %sDependencies%s
+	- %sIndentation analysis%s
+	- %sAverage function size%s
 
 Simplify your code analysis. Use go-cli-tool!`,
 		"\033[34m", "\033[0m", // Azul no título
-		"\033[32m", "\033[0m", // Verde nos itens
 		"\033[32m", "\033[0m", // Total line count
 		"\033[32m", "\033[0m", // Number of comment lines
 		"\033[32m", "\033[0m", // Number of functions
 		"\033[32m", "\033[0m", // Count code percentage
-		"\033[32m", "\033[0m"), // Average function size
+		"\033[32m", "\033[0m", // Dependencies
+		"\033[32m", "\033[0m", // Indentation analysis
+		"\033[32m", "\033[0m", // Average function size
+	),
 }
 
 func RootCommand() {
@@ -55,4 +60,5 @@ func init() {
 	RootCmd.AddCommand(run_all_commands.RunAllCommand)
 	RootCmd.AddCommand(version.VersionCommand())
 	RootCmd.AddCommand(count_average_function_size.CountAverageFunctionSizeCmd)
+	RootCmd.AddCommand(send_metrics.SendMetricsCmd)
 }

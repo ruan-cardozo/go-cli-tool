@@ -46,6 +46,7 @@ This command performs multiple analyses simultaneously including:
 - Code Comment Percentage Analysis
 - Method count analysis (public/private)
 - Average Function Size Analysis
+- Dependency analysis
 
 Results are presented in terminal or json output, providing a complete overview
 of your JavaScript codebase. Use flags to customize the analysis and output format.`,
@@ -449,5 +450,4 @@ func init() {
 	RunAllCommand.Flags().StringVarP(&utils.FilePath, "file", "f", "", "Path to the JavaScript file (must be a single file, not a directory)")
 	RunAllCommand.Flags().StringVarP(&utils.DirectoryPath, "directory", "d", "", "Path to the directory containing JavaScript files. The tool will automatically expand the provided path.")
 	RunAllCommand.Flags().StringVarP(&utils.OutputFilePath, "output", "o", "", "Specify the output file path. If omitted, results will be displayed in the terminal.")
-	RunAllCommand.Flags().BoolVar(&utils.Detailed, "detailed", false, "Show detailed analysis, including per-file information.")
 }
